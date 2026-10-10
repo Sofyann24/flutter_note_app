@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_apps/screens/screens.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -55,7 +56,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: Container(
                       padding: EdgeInsets.only(top: 0),
-                      decoration: BoxDecoration(border: Border.all()),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                       child: ListTile(title: Text('Title ${index + 1}')),
                     ),
                   );
@@ -64,6 +68,21 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Tambah Note',
+        backgroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return AddNoteScreen();
+              },
+            ),
+          );
+        },
+        child: Icon(Icons.add, color: Colors.black, size: 28),
       ),
     );
   }

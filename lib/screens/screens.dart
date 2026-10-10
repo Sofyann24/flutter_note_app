@@ -1,1 +1,2 @@
-export 'home_screens.dart';
+export 'home_screen.dart';
+export 'add_note_screen.dart';
