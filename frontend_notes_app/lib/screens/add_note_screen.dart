@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-class AddNoteScreen extends StatelessWidget {
+const List<String> listDropdown = ['All', 'Daily', 'Monthly', 'Annual'];
+
+class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({super.key});
+
+  @override
+  State<AddNoteScreen> createState() => _AddNoteScreenState();
+}
+
+class _AddNoteScreenState extends State<AddNoteScreen> {
+  String dropdownValue = listDropdown.first;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +32,24 @@ class AddNoteScreen extends StatelessWidget {
             children: [
               Column(
                 children: [
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    items: listDropdown.map<DropdownMenuItem<String>>((
+                      String value,
+                    ) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          dropdownValue = value;
+                        });
+                      }
+                    },
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
                       hintText: 'Title',
@@ -39,9 +66,18 @@ class AddNoteScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(onPressed: () {}, child: Text('Tambah')),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: const Color.fromARGB(255, 222, 234, 64),
+                  ),
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: 35,
+                  child: Text('Tambah', style: TextStyle(color: Colors.black)),
+                ),
               ),
             ],
           ),
