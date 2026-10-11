@@ -1,11 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:notes_apps/providers/category_provider.dart';
 import 'package:notes_apps/screens/screens.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _nameCategory = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<CategoryProvider>().fetchCategories();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final categoryProvider = context.watch<CategoryProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Notes'),
@@ -18,35 +36,82 @@ class HomeScreen extends StatelessWidget {
             children: [
               // HEADER KATEGORI
               SizedBox(
-                height: 58,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 6,
-                  itemBuilder: (BuildContext context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(22),
-                        ),
-                        child: Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(6),
-                          child: Text(
-                            'Kategori ${index + 1}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                height: 60,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categoryProvider.category.length,
+                        itemBuilder: (BuildContext context, index) {
+                          final cat = categoryProvider.category[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(22),
+                              ),
+                              child: Container(
+                                width: 60,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(2),
+                                child: Text(
+                                  cat.nameCategory,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                    Container(
+                      color: Colors.transparent,
+                      width: 50,
+                      child: GestureDetector(
+                        child: Icon(Icons.add),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Add Category'),
+                                content: TextFormField(),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text('Add'),
+                                    onPressed: () {
+                                      final snackBar = SnackBar(
+                                        content: const Text(
+                                          'Category has been add',
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-          
+
               // CONTENT
               Expanded(
                 child: ListView.builder(

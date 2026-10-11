@@ -10,5 +10,5 @@ Route::get('/user', function (Request $request) {
 
 
 // ROUTES CATEGORIES
-Route::get('category', [CategoryController::class, 'index']);
-Route::post('category/store', [CategoryController::class, 'store']);
+Route::get('/category', [CategoryController::class, 'index']);
+Route::post('/category/store', [CategoryController::class, 'store']);
