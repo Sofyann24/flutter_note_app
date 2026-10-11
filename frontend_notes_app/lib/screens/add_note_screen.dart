@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 const List<String> listDropdown = ['All', 'Daily', 'Monthly', 'Annual'];
@@ -11,6 +12,7 @@ class AddNoteScreen extends StatefulWidget {
 
 class _AddNoteScreenState extends State<AddNoteScreen> {
   String dropdownValue = listDropdown.first;
+  final valueListenable = ValueNotifier<String?>(null);
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +34,36 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             children: [
               Column(
                 children: [
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    items: listDropdown.map<DropdownMenuItem<String>>((
-                      String value,
-                    ) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? value) {
-                      if (value != null) {
-                        setState(() {
-                          dropdownValue = value;
-                        });
-                      }
-                    },
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton2<String>(
+                      isExpanded: true,
+                      hint: Text('Select Item'),
+                      items: listDropdown
+                          .map(
+                            (String item) => DropdownItem<String>(
+                              value: item,
+                              child: Padding(
+                                padding: const EdgeInsetsGeometry.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Text(item),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      valueListenable: valueListenable,
+                      onChanged: (value) {
+                        valueListenable.value = value;
+                      },
+                      dropdownStyleData: const DropdownStyleData(
+                        maxHeight: 200,
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      ),
+                    ),
                   ),
+
                   TextFormField(
                     decoration: InputDecoration(
                       hintText: 'Title',
